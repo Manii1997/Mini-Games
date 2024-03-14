@@ -1,0 +1,224 @@
+.rps-main-container {
+  background-color: #223a5f;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+}
+
+.rps-game-play-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rps-result-container {
+  padding: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 60px;
+  align-items: center;
+}
+
+.rps-game-option {
+  font-size: 16px;
+  font-family: 'Roboto';
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rps-options-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.rps-score-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 10px;
+}
+
+.rps-score-phrase {
+  font-size: 16px;
+  font-family: 'Roboto';
+  font-weight: 700;
+  color: #223a5f;
+}
+
+.rps-score-number {
+  font-size: 28px;
+  font-family: 'Roboto';
+  font-weight: 700;
+  color: #223a5f;
+}
+
+.rps-game-view-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rps-game-back-btn-container {
+  width: 80vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rps-game-pop-up-rule {
+  padding: 8px 16px;
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.rps-game-back-btn {
+  padding: 8px 16px;
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.game-options-lists {
+  padding-left: 0px;
+  margin-left: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  max-width: 480px;
+  flex-wrap: wrap;
+}
+
+.rps-trigger-btn {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  color: #223a5f;
+  padding: 8px 15px 8px 15px;
+  margin: 8px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.rps-popup-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rps-close-button {
+  border: none;
+  cursor: pointer;
+  outline: none;
+  background-color: transparent;
+}
+
+.rps-pop-up-img {
+  width: 90%;
+  align-self: center;
+}
+
+.rps-pop-up-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.rps-game-result-view-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rps-selected-options-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+  max-width: 600px;
+}
+
+.rps-game-user-option-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.rps-game-participant {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Roboto';
+}
+
+.rps-game-participant-choice-img {
+  width: 170px;
+  height: 170px;
+}
+
+.rps-result-text {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Roboto';
+  text-align: center;
+}
+
+.rps-play-again-button {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Roboto';
+  color: #223a5f;
+  padding: 8px 15px 8px 15px;
+  margin: 8px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  align-self: center;
+}
+
+.rps-popup-rules {
+  display: flex;
+}
+
+.rps-game-rules-list-item-popup {
+  font-size: 18px;
+  line-height: 32p;
+  margin-top: 10px;
+}
+
+.rps-game-heading {
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+}
+.rps-game-subheading {
+  color: #ffffff;
+}

@@ -1,0 +1,125 @@
+.rps-game-rules-main-container {
+  background: #223a5f;
+  padding: 30px;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.rps-game-rules-secondary-container {
+  width: 100%;
+}
+@media screen and (min-width: 768px) {
+  .rps-game-rules-secondary-container {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+.back-btn-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 10px;
+}
+.back-icon {
+  color: #ffffff;
+}
+.back-btn {
+  background-color: transparent;
+  padding: 0px;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.back-btn-link {
+  text-decoration: none;
+}
+
+.rps-game-rules-container {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 12px;
+}
+@media screen and (min-width: 768px) {
+  .rps-divided-rules-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .rps-rules-result {
+    color: #e9a920;
+  }
+}
+
+.rps-game-heading-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rps-game-rules-img {
+  width: 227px;
+  height: 202px;
+}
+@media screen and (min-width: 768px) {
+  .rps-game-rules-img {
+    width: 266px;
+    height: 237px;
+  }
+}
+
+.rps-game-rules-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: -20px;
+  text-align: center;
+}
+
+.rps-game-sub-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+}
+
+.rps-game-rules-list-item {
+  font-size: 16px;
+  color: #ffffff;
+  margin-top: 20px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.rps-game-start-btn {
+  padding: 8px 16px;
+  border: none;
+  color: #223a5f;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+@media screen and (min-width: 768px) {
+  .rps-game-start-btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.rps-game-start-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.game-start-btn {
+  text-decoration: none;
+}

@@ -1,0 +1,106 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(to bottom right, #9796f0, #fbc7d4);
+  min-height: 100vh;
+}
+.emoji-body-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 80px;
+}
+.emojis-list-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 20px;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: auto;
+}
+
+.emoji-game-back-btn-container {
+  width: 70%;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.emoji-game-back-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+  background-color: transparent;
+  padding: 0px;
+  border: none;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.emoji-game-pop-up-rule {
+  padding: 8px 16px;
+  border: 2px solid #334155;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.emoji-game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emoji-game-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 85%;
+  max-height: 90%;
+}
+@media screen and (min-width: 768px) {
+  .emoji-game-modal {
+    width: 50%;
+  }
+}
+
+.emoji-game-rules-modal-content-container {
+  max-height: calc(100% - 40px);
+  overflow-y: auto;
+}
+
+.bact-btn-link {
+  text-decoration: none;
+}
+
+.emoji-game-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 24px;
+}

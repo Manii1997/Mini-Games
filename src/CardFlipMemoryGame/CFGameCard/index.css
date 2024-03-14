@@ -1,0 +1,39 @@
+.board {
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  background-color: #154315;
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.card {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  perspective: 1000px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.5s;
+}
+
+.card.flipped img {
+  transform: rotateY(180deg);
+}
+
+.timer {
+  margin-top: 20px;
+}
+
+.card-image {
+  cursor: pointer;
+}

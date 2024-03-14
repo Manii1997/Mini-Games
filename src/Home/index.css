@@ -1,0 +1,96 @@
+.home-page-main-container {
+  background: linear-gradient(to right, #834d9b, #d04ed6);
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.home-main-heading {
+  color: #f8fafc;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.game-link-list-container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (min-width: 768px) {
+  .game-link-list-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 30px;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.game-link-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  width: 312px;
+  height: 176px;
+}
+@media screen and (min-width: 768px) {
+  .game-link-container {
+    width: 554px;
+    height: 280px;
+  }
+}
+
+.game-name {
+  text-decoration: none !important;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.emoji-game-img {
+  width: 128px;
+  height: 108px;
+}
+.mm-game-img {
+  width: 145px;
+  height: 108px;
+}
+.rps-game-img {
+  width: 121px;
+  height: 108px;
+}
+.card-flip-game-img {
+  width: 264px;
+  height: 143px;
+}
+@media screen and (min-width: 768px) {
+  .emoji-game-img {
+    width: 224px;
+    height: 188px;
+  }
+  .mm-game-img {
+    width: 236px;
+    height: 176px;
+  }
+  .rps-game-img {
+    width: 197px;
+    height: 176px;
+  }
+  .card-flip-game-img {
+    width: 434px;
+    height: 232px;
+  }
+}
+
+.game-link-name {
+  text-decoration: none;
+}
