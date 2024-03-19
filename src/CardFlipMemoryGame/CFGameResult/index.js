@@ -1,25 +1,38 @@
-import {Link} from 'react-router-dom'
 import './index.css'
 
-const CFGameResult = ({result, cardFlipCount}) => (
-  <div className="game-result">
+const CFGameResult = ({result, cardFlipCount, onPlayAgain}) => (
+  <div className="mm-game-result">
     {result === 'win' ? (
-      <div>
-        <h1>Congratulations!</h1>
-        <p>You have matched all cards in record time.</p>
-        <p>No. of Flips: {cardFlipCount}</p>
+      <div className="cfg-result-container">
+        <img
+          src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1710485560/React-Mini-Project-Images/Win_lvf8uj.png"
+          alt="grinning face with big eyes"
+          className="result-img"
+        />
+        <h1 className="cfg-result-heading">Congratulations</h1>
+        <p className="flip-count">No. of Flips - {cardFlipCount}</p>
+        <h1 className="cfg-result-sub-heading">
+          You matched all of the cards in record time
+        </h1>
       </div>
     ) : (
-      <div>
-        <h1>Game Over!</h1>
-        <p>You did not match all cards in record time.</p>
+      <div className="cfg-result-container">
+        <img
+          src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/neutral-face_1f610.png"
+          alt="neutral face"
+          className="result-img"
+        />
+        <h1 className="cfg-result-heading">Better luck next time!</h1>
+        <p className="flip-count">No. of Flips - {cardFlipCount}</p>
+        <h1 className="cfg-result-sub-heading">
+          You did not match all of the cards in record time
+        </h1>
       </div>
     )}
-    <Link to="/mm-game">
-      <button type="button" className="play-again-btn">
-        Play Again
-      </button>
-    </Link>
+
+    <button type="button" className="play-again-btn" onClick={onPlayAgain}>
+      Play Again
+    </button>
   </div>
 )
 

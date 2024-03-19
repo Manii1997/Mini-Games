@@ -1,17 +1,18 @@
 import {Component} from 'react'
 import {Link} from 'react-router-dom'
 import {BiArrowBack} from 'react-icons/bi'
-import Modal from 'react-modal'
 import {CgClose} from 'react-icons/cg'
+import Modal from 'react-modal'
 import './index.css'
 
 const gridSize = 3
 const highlightDuration = 3000
-const totalLevels = 5
+const totalLevels = 15
 
 class MMGame extends Component {
   state = {
     level: 1,
+    maxLevel: 0,
     grid: [],
     highlightedCells: [],
     userSelection: [],
@@ -23,11 +24,18 @@ class MMGame extends Component {
   componentDidMount() {
     this.initializeGrid()
     this.startTimer()
+    const maxLevel = localStorage.getItem('maxLevel')
+    if (maxLevel) {
+      this.setState({maxLevel: parseInt(maxLevel, 10)})
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {level} = this.state
-    if (prevState.level !== level) {
+    const {level, maxLevel} = this.state
+    if (prevState.level !== level && level > maxLevel) {
+      localStorage.setItem('maxLevel', level)
+    }
+    if (prevState.level !== level || prevState.maxLevel !== maxLevel) {
       this.initializeGrid()
       this.startTimer()
     }
@@ -37,18 +45,14 @@ class MMGame extends Component {
 
   generateHighlightedCells = () => {
     const {level} = this.state
-    const cells = []
-    let count = 0
-    while (count < level) {
+    const cells = new Set() // Using a Set to ensure uniqueness
+    while (cells.size < level) {
       const row = this.getRandomInt(0, gridSize - 1)
       const col = this.getRandomInt(0, gridSize - 1)
       const cell = `${row}-${col}`
-      if (!cells.includes(cell)) {
-        cells.push(cell)
-        count += 1
-      }
+      cells.add(cell)
     }
-    return cells
+    return Array.from(cells) // Convert set to array
   }
 
   initializeGrid = () => {
@@ -90,11 +94,24 @@ class MMGame extends Component {
   }
 
   startTimer = () => {
+    console.log('Timer started')
+    this.setState({progress: 0})
+
+    const intervalId = setInterval(() => {
+      const {progress} = this.state
+      if (progress < 100) {
+        console.log('Updating progress...')
+        this.setState(prevState => ({progress: prevState.progress + 1}))
+      } else {
+        console.log('Progress reached 100%')
+        clearInterval(intervalId)
+      }
+    }, highlightDuration / 100)
+
     setTimeout(() => {
-      this.setState({highlightedCells: this.generateHighlightedCells()})
-    }, 1000)
-    setTimeout(() => {
-      this.setState({highlightedCells: [], progress: 0})
+      console.log('Highlighting ended')
+      this.setState({highlightedCells: []})
+      clearInterval(intervalId)
     }, highlightDuration + 1000)
   }
 
@@ -126,9 +143,9 @@ class MMGame extends Component {
     } = this.state
 
     return (
-      <div>
+      <div className="mm-game-main-container">
         <div className="mm-game-back-btn-container">
-          <Link to="/mm-game" className="bact-btn-link">
+          <Link to="/memory-matrix" className="bact-btn-link">
             <button type="button" className="mm-game-back-btn">
               <BiArrowBack />
               Back
@@ -156,49 +173,53 @@ class MMGame extends Component {
               >
                 <CgClose />
               </button>
-              <h1 className="mm-game-sub-heading">Rules</h1>
-              <ul className="mm-game-rules-list-items">
-                <li className="mm-game-rules-list-item">
-                  In each level of the Game, Users should be able to see the
-                  Grid with (N X N) size starting from 3 and the grid will
-                  highlight N cells in Blue, the N highlighted cells will be
-                  picked randomly.
-                </li>
-                <li className="mm-game-rules-list-item">
-                  The highlighted cells will remain N seconds for the user to
-                  memorize the cells. At this point, the user should not be able
-                  to perform any action.
-                </li>
-                <li className="mm-game-rules-list-item">
-                  After N seconds, the grid will clear the N highlighted cells.
-                </li>
-              </ul>
-              <ul className="mm-game-rules-list-items">
-                <li className="mm-game-rules-list-item">
-                  At N seconds, the user can click on any cell. Clicking on a
-                  cell that was highlighted before it will turn blue. Clicking
-                  on the other cells that were not highlighted before then will
-                  turn to red.
-                </li>
-                <li className="mm-game-rules-list-item">
-                  The user should be promoted to the next level if they guess
-                  all N cells correctly in one attempt.
-                </li>
-                <li className="mm-game-rules-list-item">
-                  The user should be taken to the results page if the user
-                  clicks on the wrong cell.
-                </li>
-                <li className="mm-game-rules-list-item">
-                  If the user completed all the levels, then the user should be
-                  taken to the results page.
-                </li>
-              </ul>
+              <h1 className="mm-game-sub-heading-popup">Rules</h1>
+              <div className="mm-game-rules-popup">
+                <ul className="mm-game-rules-list-items-popup">
+                  <li className="mm-game-rules-list-item-popup">
+                    In each level of the Game, Users should be able to see the
+                    Grid with (N X N) size starting from 3 and the grid will
+                    highlight N cells in Blue, the N highlighted cells will be
+                    picked randomly.
+                  </li>
+                  <li className="mm-game-rules-list-item-popup">
+                    The highlighted cells will remain N seconds for the user to
+                    memorize the cells. At this point, the user should not be
+                    able to perform any action.
+                  </li>
+                  <li className="mm-game-rules-list-item-popup">
+                    After N seconds, the grid will clear the N highlighted
+                    cells.
+                  </li>
+                </ul>
+                <ul className="mm-game-rules-list-items-popup">
+                  <li className="mm-game-rules-list-item-popup">
+                    At N seconds, the user can click on any cell. Clicking on a
+                    cell that was highlighted before it will turn blue. Clicking
+                    on the other cells that were not highlighted before then
+                    will turn to red.
+                  </li>
+                  <li className="mm-game-rules-list-item-popup">
+                    The user should be promoted to the next level if they guess
+                    all N cells correctly in one attempt.
+                  </li>
+                  <li className="mm-game-rules-list-item-popup">
+                    The user should be taken to the results page if the user
+                    clicks on the wrong cell.
+                  </li>
+                  <li className="mm-game-rules-list-item-popup">
+                    If the user completed all the levels, then the user should
+                    be taken to the results page.
+                  </li>
+                </ul>
+              </div>
             </div>
           </Modal>
         </div>
         {gameOver ? (
           <div>
             <h1>Game Over!</h1>
+            <progress value={progress} max="100" />
             <p>
               Your score: {level - 1} out of {totalLevels}
             </p>
@@ -208,7 +229,8 @@ class MMGame extends Component {
           </div>
         ) : (
           <div>
-            <h1>Level {level}</h1>
+            <h1 className="mm-game-heading">Memory Matrix</h1>
+            <p className="mm-levels">Level - {level}</p>
             <div
               role="grid"
               style={{
@@ -222,12 +244,8 @@ class MMGame extends Component {
                     type="button"
                     key={cell.id}
                     onClick={() => this.handleCellClick(cell.id)}
-                    disabled={highlightedCells.length > 0}
-                    data-testid={
-                      highlightedCells.includes(cell.id)
-                        ? 'highlighted'
-                        : 'notHighlighted'
-                    }
+                    disabled={highlightedCells.length > 0 || progress < 100}
+                    data-testid="notHighlighted"
                     aria-label={`Cell ${rowIndex}-${colIndex}`}
                     style={{
                       width: '50px',
@@ -243,7 +261,6 @@ class MMGame extends Component {
                 )),
               )}
             </div>
-            <progress value={progress} max="100" />
           </div>
         )}
       </div>

@@ -9,31 +9,61 @@
   border-radius: 20px;
 }
 
+.cart-list-items {
+  list-style: none;
+  margin-right: -10px;
+}
+
 .card {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   margin: 10px;
   perspective: 1000px;
   background-color: #ffffff;
   padding: 10px;
   border-radius: 10px;
+  position: relative;
 }
 
 .card img {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  transition: transform 0.5s;
 }
 
-.card.flipped img {
+.cf-card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .cf-card-inner {
   transform: rotateY(180deg);
 }
 
-.timer {
-  margin-top: 20px;
+.cf-card-front,
+.cf-card-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
 }
 
-.card-image {
-  cursor: pointer;
+.cf-card-front {
+  background-color: #a7f3d080;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.cf-card-back-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cf-card-back {
+  transform: rotateY(180deg);
 }

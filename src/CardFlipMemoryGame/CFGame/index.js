@@ -68,8 +68,9 @@ class CFGame extends Component {
     cards: [],
     flippedCards: [],
     matchedCards: [],
-    gameStarted: false,
+    gameStarted: true,
     timeLeft: 120,
+    formattedTime: '02:00',
     modalIsOpen: false,
     cardFlipCount: 0,
     score: 0,
@@ -79,6 +80,7 @@ class CFGame extends Component {
   componentDidMount() {
     const initialCards = this.generateCards()
     this.setState({cards: initialCards})
+    this.startTimer()
   }
 
   generateCards = () => {
@@ -116,7 +118,9 @@ class CFGame extends Component {
 
     if (!gameStarted) {
       this.setState({gameStarted: true})
+      this.startTimer()
     }
+
     if (flippedCards.length === 2) {
       return
     }
@@ -134,7 +138,7 @@ class CFGame extends Component {
       () => {
         const {flippedCards: currentFlippedCards} = this.state
         if (currentFlippedCards.length === 2) {
-          setTimeout(this.compareCards, 2000)
+          setTimeout(this.compareCards, 1000)
         }
       },
     )
@@ -153,6 +157,11 @@ class CFGame extends Component {
 
     this.setState(prevState => {
       if (firstCard.name === secondCard.name) {
+        const allMatched =
+          prevState.matchedCards.length + 2 === prevState.cards.length
+        if (allMatched) {
+          this.handleGameResult('win')
+        }
         return {
           matchedCards: [...prevState.matchedCards, firstCardId, secondCardId],
           flippedCards: [],
@@ -169,29 +178,19 @@ class CFGame extends Component {
     })
   }
 
-  onClickOpenModal = () => {
-    this.setState({modalIsOpen: true})
-  }
-
-  onClickCloseModal = () => {
-    this.setState({modalIsOpen: false})
-  }
-
   startTimer = () => {
-    const {timeLeft} = this.state
-
     this.timerInterval = setInterval(() => {
-      this.setState(
-        prevState => ({
-          timeLeft: prevState.timeLeft - 1,
-        }),
-        () => {
-          if (timeLeft === 0) {
-            clearInterval(this.timerInterval)
-            this.handleGameResult('lose')
-          }
-        },
-      )
+      this.setState(prevState => {
+        const newTimeLeft = prevState.timeLeft - 1
+        const minutes = Math.floor(newTimeLeft / 60)
+        const seconds = newTimeLeft % 60
+        const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+        if (newTimeLeft === 0) {
+          clearInterval(this.timerInterval)
+          this.handleGameResult('lose')
+        }
+        return newTimeLeft > 0 ? {timeLeft: newTimeLeft, formattedTime} : null
+      })
     }, 1000)
   }
 
@@ -200,10 +199,38 @@ class CFGame extends Component {
     this.setState({gameResult: result})
   }
 
+  handlePlayAgain = () => {
+    const initialCards = this.generateCards()
+    this.setState(
+      {
+        cards: initialCards,
+        flippedCards: [],
+        matchedCards: [],
+        gameStarted: true,
+        timeLeft: 120,
+        formattedTime: '02:00',
+        cardFlipCount: 0,
+        score: 0,
+        gameResult: null,
+      },
+      () => {
+        this.startTimer()
+      },
+    )
+  }
+
+  onClickOpenModal = () => {
+    this.setState({modalIsOpen: true})
+  }
+
+  onClickCloseModal = () => {
+    this.setState({modalIsOpen: false})
+  }
+
   render() {
     const {
       cards,
-      timeLeft,
+      formattedTime,
       modalIsOpen,
       score,
       gameResult,
@@ -211,7 +238,13 @@ class CFGame extends Component {
     } = this.state
 
     if (gameResult === 'win' || gameResult === 'lose') {
-      return <CFGameResult result={gameResult} cardFlipCount={cardFlipCount} />
+      return (
+        <CFGameResult
+          result={gameResult}
+          cardFlipCount={cardFlipCount}
+          onPlayAgain={this.handlePlayAgain}
+        />
+      )
     }
 
     return (
@@ -280,19 +313,26 @@ class CFGame extends Component {
           </Modal>
         </div>
         <h1 className="cfg-heading">Card-Flip Memory Game</h1>
+        <div className="score-timer-container">
+          <p className="card-flip-count">Card flip count - {cardFlipCount}</p>
+          <p className="timer">Time Left: {formattedTime}</p>
+          <p className="score">Score - {score}</p>
+        </div>
         <div className="board">
           {cards.map(card => (
-            <CFGameCard
-              key={card.id}
-              id={card.id}
-              name={card.name}
-              image={card.image}
-              handleClick={this.handleClick}
-            />
+            <ul>
+              <CFGameCard
+                key={card.id}
+                id={card.id}
+                name={card.name}
+                image={card.image}
+                handleClick={this.handleClick}
+                data-testid="cardsData"
+                flipped={card.flipped}
+              />
+            </ul>
           ))}
         </div>
-        <div className="timer">Time Left: {timeLeft}</div>
-        <div className="score">Score: {score}</div>
       </div>
     )
   }

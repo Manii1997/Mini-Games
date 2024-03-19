@@ -28,7 +28,7 @@ const App = () => (
       component={RockPaperScissors}
     />
     <Route exact path="/memory-matrix" component={MMGameRules} />
-    <Route exact path="/memory-matrix-play" component={MMGame} />
+    <Route exact path="/memory-matrix-game-play" component={MMGame} />
     <Route exact path="/card-flip-memory-game" component={CFRules} />
     <Route exact path="/card-flip-memory-game-play" component={CFGame} />
   </Switch>
