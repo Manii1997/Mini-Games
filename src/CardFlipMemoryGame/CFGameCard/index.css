@@ -1,14 +1,3 @@
-.board {
-  width: 60%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20px;
-  background-color: #154315;
-  padding: 30px;
-  border-radius: 20px;
-}
-
 .cart-list-items {
   list-style: none;
   margin-right: -10px;

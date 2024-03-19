@@ -18,7 +18,7 @@ const CFGameResult = ({result, cardFlipCount, onPlayAgain}) => (
     ) : (
       <div className="cfg-result-container">
         <img
-          src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/neutral-face_1f610.png"
+          src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1710485559/React-Mini-Project-Images/Lose_cbnnsq.png"
           alt="neutral face"
           className="result-img"
         />

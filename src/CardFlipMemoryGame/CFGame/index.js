@@ -121,6 +121,11 @@ class CFGame extends Component {
       this.startTimer()
     }
 
+    const clickedCard = cards.find(card => card.id === id)
+    if (clickedCard.flipped) {
+      return
+    }
+
     if (flippedCards.length === 2) {
       return
     }
@@ -320,17 +325,15 @@ class CFGame extends Component {
         </div>
         <div className="board">
           {cards.map(card => (
-            <ul>
+            <li key={card.id} className="card-list-item">
               <CFGameCard
-                key={card.id}
                 id={card.id}
                 name={card.name}
                 image={card.image}
                 handleClick={this.handleClick}
-                data-testid="cardsData"
                 flipped={card.flipped}
               />
-            </ul>
+            </li>
           ))}
         </div>
       </div>
