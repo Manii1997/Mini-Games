@@ -19,6 +19,7 @@ class MMGame extends Component {
     gameOver: false,
     modalIsOpen: false,
     progress: 0,
+    disableCells: true,
   }
 
   componentDidMount() {
@@ -45,14 +46,14 @@ class MMGame extends Component {
 
   generateHighlightedCells = () => {
     const {level} = this.state
-    const cells = new Set() // Using a Set to ensure uniqueness
+    const cells = new Set()
     while (cells.size < level) {
       const row = this.getRandomInt(0, gridSize - 1)
       const col = this.getRandomInt(0, gridSize - 1)
       const cell = `${row}-${col}`
       cells.add(cell)
     }
-    return Array.from(cells) // Convert set to array
+    return Array.from(cells)
   }
 
   initializeGrid = () => {
@@ -68,28 +69,31 @@ class MMGame extends Component {
       newGrid.push(row)
       i += 1
     }
-    this.setState({grid: newGrid})
+    this.setState({grid: newGrid, disableCells: true})
   }
 
   handleCellClick = id => {
     const {highlightedCells, userSelection, level} = this.state
-    if (highlightedCells.includes(id)) {
-      this.setState({userSelection: [...userSelection, id]})
-      if (userSelection.length === level - 1) {
-        if (level === totalLevels) {
-          this.setState({gameOver: true})
-        } else {
-          setTimeout(() => {
-            this.setState(prevState => ({
-              level: prevState.level + 1,
-              userSelection: [],
-              highlightedCells: this.generateHighlightedCells(),
-            }))
-          }, 1000)
+    if (!this.disableCells) {
+      if (highlightedCells.includes(id)) {
+        this.setState({userSelection: [...userSelection, id]})
+        if (userSelection.length === level - 1) {
+          if (level === totalLevels) {
+            this.setState({gameOver: true})
+          } else {
+            setTimeout(() => {
+              this.setState(prevState => ({
+                level: prevState.level + 1,
+                userSelection: [],
+                highlightedCells: this.generateHighlightedCells(),
+                disableCells: true,
+              }))
+            }, 1000)
+          }
         }
+      } else {
+        this.setState({gameOver: true})
       }
-    } else {
-      this.setState({gameOver: true})
     }
   }
 
@@ -110,7 +114,7 @@ class MMGame extends Component {
 
     setTimeout(() => {
       console.log('Highlighting ended')
-      this.setState({highlightedCells: []})
+      this.setState({highlightedCells: [], disableCells: false})
       clearInterval(intervalId)
     }, highlightDuration + 1000)
   }
@@ -140,6 +144,7 @@ class MMGame extends Component {
       gameOver,
       modalIsOpen,
       progress,
+      disableCells,
     } = this.state
 
     return (
@@ -244,18 +249,18 @@ class MMGame extends Component {
                     type="button"
                     key={cell.id}
                     onClick={() => this.handleCellClick(cell.id)}
-                    disabled={highlightedCells.length > 0 || progress < 100}
-                    data-testid="notHighlighted"
+                    disabled={disableCells}
+                    data-testid={`cell-${rowIndex}-${colIndex}`}
                     aria-label={`Cell ${rowIndex}-${colIndex}`}
+                    className="mm-game-cell"
                     style={{
                       width: '50px',
                       height: '50px',
                       border: '1px solid black',
                       backgroundColor: highlightedCells.includes(cell.id)
                         ? 'blue'
-                        : cell.color,
-                      cursor:
-                        highlightedCells.length === 0 ? 'pointer' : 'default',
+                        : 'white',
+                      cursor: disableCells ? 'default' : 'pointer',
                     }}
                   />
                 )),
