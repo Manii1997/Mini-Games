@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom'
 import {BiArrowBack} from 'react-icons/bi'
 import {CgClose} from 'react-icons/cg'
 import Modal from 'react-modal'
+import {Line} from 'rc-progress'
 import './index.css'
 
-const gridSize = 3
 const highlightDuration = 3000
 const totalLevels = 15
 
@@ -24,11 +24,9 @@ class MMGame extends Component {
 
   componentDidMount() {
     this.initializeGrid()
-    this.startTimer()
-    const maxLevel = localStorage.getItem('maxLevel')
-    if (maxLevel) {
-      this.setState({maxLevel: parseInt(maxLevel, 10)})
-    }
+    setTimeout(() => {
+      this.setState({disableCells: false})
+    }, highlightDuration)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,63 +40,7 @@ class MMGame extends Component {
     }
   }
 
-  getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-
-  generateHighlightedCells = () => {
-    const {level} = this.state
-    const cells = new Set()
-    while (cells.size < level) {
-      const row = this.getRandomInt(0, gridSize - 1)
-      const col = this.getRandomInt(0, gridSize - 1)
-      const cell = `${row}-${col}`
-      cells.add(cell)
-    }
-    return Array.from(cells)
-  }
-
-  initializeGrid = () => {
-    const newGrid = []
-    let i = 0
-    while (i < gridSize) {
-      const row = []
-      let j = 0
-      while (j < gridSize) {
-        row.push({id: `${i}-${j}`, color: 'white'})
-        j += 1
-      }
-      newGrid.push(row)
-      i += 1
-    }
-    this.setState({grid: newGrid, disableCells: true})
-  }
-
-  handleCellClick = id => {
-    const {highlightedCells, userSelection, level} = this.state
-    if (!this.disableCells) {
-      if (highlightedCells.includes(id)) {
-        this.setState({userSelection: [...userSelection, id]})
-        if (userSelection.length === level - 1) {
-          if (level === totalLevels) {
-            this.setState({gameOver: true})
-          } else {
-            setTimeout(() => {
-              this.setState(prevState => ({
-                level: prevState.level + 1,
-                userSelection: [],
-                highlightedCells: this.generateHighlightedCells(),
-                disableCells: true,
-              }))
-            }, 1000)
-          }
-        }
-      } else {
-        this.setState({gameOver: true})
-      }
-    }
-  }
-
   startTimer = () => {
-    console.log('Timer started')
     this.setState({progress: 0})
 
     const intervalId = setInterval(() => {
@@ -119,6 +61,104 @@ class MMGame extends Component {
     }, highlightDuration + 1000)
   }
 
+  getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+
+  generateHighlightedCells = () => {
+    const {level} = this.state
+    const cells = new Set()
+    while (cells.size < level) {
+      const row = this.getRandomInt(0, level - 1)
+      const col = this.getRandomInt(0, level - 1)
+      const cell = `${row}-${col}`
+      cells.add(cell)
+    }
+    return Array.from(cells)
+  }
+
+  shuffleCells = array => {
+    const newArray = [...array]
+    let i = newArray.length - 1
+    while (i > 0) {
+      const j = Math.floor(Math.random() * (i + 1))
+      const temp = newArray[i]
+      newArray[i] = newArray[j]
+      newArray[j] = temp
+      i -= 1
+    }
+    return newArray
+  }
+
+  initializeGrid = () => {
+    const {level} = this.state
+    let gridSize = level >= 3 ? level : 3
+    gridSize -= 1
+    const newGrid = []
+
+    for (let i = 0; i <= gridSize; i += 1) {
+      const row = []
+      for (let j = 0; j <= gridSize; j += 1) {
+        row.push({
+          id: `${i}-${j}`,
+          color: 'white',
+          highlighted: false,
+          notHighlighted: false,
+        })
+      }
+      newGrid.push(row)
+    }
+
+    const highlightedCells = this.generateHighlightedCells()
+    highlightedCells.forEach(cell => {
+      const [row, col] = cell.split('-').map(Number)
+      newGrid[row][col].highlighted = true
+    })
+
+    this.setState({grid: newGrid, disableCells: true, highlightedCells})
+
+    setTimeout(() => {
+      const updatedGrid = newGrid.map(row =>
+        row.map(cell => ({...cell, highlighted: false})),
+      )
+      this.setState({grid: updatedGrid, disableCells: false})
+
+      setTimeout(() => {
+        this.setState({disableCells: false})
+      }, highlightDuration)
+    }, highlightDuration)
+  }
+
+  handleCellClick = id => {
+    const {highlightedCells, userSelection, level} = this.state
+
+    if (!this.disableCells) {
+      if (highlightedCells.includes(id)) {
+        this.setState({userSelection: [...userSelection, id]})
+        if (userSelection.length === level) {
+          if (level === totalLevels) {
+            this.setState({gameOver: true})
+          } else {
+            setTimeout(() => {
+              this.setState(
+                prevState => ({
+                  level: prevState.level + 1,
+                  userSelection: [],
+                  highlightedCells: this.generateHighlightedCells(),
+                  disableCells: true,
+                  progress: prevState.level === 10 ? 60 : 0,
+                }),
+                () => {
+                  this.initializeGrid()
+                },
+              )
+            }, 1000)
+          }
+        }
+      } else {
+        this.setState({gameOver: true})
+      }
+    }
+  }
+
   onClickOpenModal = () => {
     this.setState({modalIsOpen: true})
   }
@@ -137,15 +177,7 @@ class MMGame extends Component {
   }
 
   render() {
-    const {
-      level,
-      grid,
-      highlightedCells,
-      gameOver,
-      modalIsOpen,
-      progress,
-      disableCells,
-    } = this.state
+    const {level, grid, gameOver, modalIsOpen, disableCells} = this.state
 
     return (
       <div className="mm-game-main-container">
@@ -189,8 +221,7 @@ class MMGame extends Component {
                   </li>
                   <li className="mm-game-rules-list-item-popup">
                     The highlighted cells will remain N seconds for the user to
-                    memorize the cells. At this point, the user should not be
-                    able to perform any action.
+                    memorize the cells. At this point, the
                   </li>
                   <li className="mm-game-rules-list-item-popup">
                     After N seconds, the grid will clear the N highlighted
@@ -208,6 +239,7 @@ class MMGame extends Component {
                     The user should be promoted to the next level if they guess
                     all N cells correctly in one attempt.
                   </li>
+
                   <li className="mm-game-rules-list-item-popup">
                     The user should be taken to the results page if the user
                     clicks on the wrong cell.
@@ -222,13 +254,70 @@ class MMGame extends Component {
           </Modal>
         </div>
         {gameOver ? (
-          <div>
-            <h1>Game Over!</h1>
-            <progress value={progress} max="100" />
-            <p>
-              Your score: {level - 1} out of {totalLevels}
-            </p>
-            <button type="button" onClick={this.handlePlayAgain}>
+          <div className="game-over">
+            <div className="smile-container">
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115525/React-Mini-Project-Images/happy6_vjxgkt.png"
+                alt="neutral face"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115529/React-Mini-Project-Images/happy5_jldlbf.png"
+                alt="grimacing face"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115541/React-Mini-Project-Images/happy_yfuwsa.png"
+                alt="slightly smiling face"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115535/React-Mini-Project-Images/happy3_etog52.png"
+                alt="grinning face with big eyes"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115538/React-Mini-Project-Images/happy2_pdzq8j.png"
+                alt="grinning face with smiling eyes"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115533/React-Mini-Project-Images/happy4_boisxh.png"
+                alt="beaming face with smiling eyes"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115544/React-Mini-Project-Images/happy8_idelwr.png"
+                alt="grinning face"
+                className="smile"
+              />
+              <img
+                src="https://res.cloudinary.com/drdl4pdnx/image/upload/v1711115524/React-Mini-Project-Images/happy7_lphdrv.png"
+                alt="smiling face with sunglasses"
+                className="smile"
+              />
+            </div>
+            <Line
+              percent={level}
+              strokeWidth={4}
+              strokeColor="#467aff"
+              trailWidth={4}
+              trailColor="#ffffff"
+            />
+
+            <div className="levels">
+              <p>level 1</p>
+              <p>level 5</p>
+              <p>level 10</p>
+              <p>level 15</p>
+            </div>
+            <h1 className="congrats">Congratulations!</h1>
+            <p className="reached-level">You have reached level {level}</p>
+            <button
+              type="button"
+              onClick={this.handlePlayAgain}
+              className="mm-play-again-btn"
+            >
               Play Again
             </button>
           </div>
@@ -240,26 +329,26 @@ class MMGame extends Component {
               role="grid"
               style={{
                 display: 'grid',
-                gridTemplateColumns: `repeat(${gridSize}, 50px)`,
+                gridTemplateColumns: `repeat(${grid.length}, 50px)`,
               }}
             >
               {grid.map((row, rowIndex) =>
-                row.map((cell, colIndex) => (
+                row.map(cell => (
                   <button
                     type="button"
                     key={cell.id}
+                    disabled={disableCells || cell.notHighlighted}
+                    data-testid={
+                      cell.notHighlighted ? 'notHighlighted' : 'highlighted'
+                    }
                     onClick={() => this.handleCellClick(cell.id)}
-                    disabled={disableCells}
-                    data-testid={`cell-${rowIndex}-${colIndex}`}
-                    aria-label={`Cell ${rowIndex}-${colIndex}`}
+                    aria-label={`Cell ${rowIndex}-${cell.id}`}
                     className="mm-game-cell"
                     style={{
                       width: '50px',
                       height: '50px',
                       border: '1px solid black',
-                      backgroundColor: highlightedCells.includes(cell.id)
-                        ? 'blue'
-                        : 'white',
+                      backgroundColor: cell.highlighted ? 'blue' : 'white',
                       cursor: disableCells ? 'default' : 'pointer',
                     }}
                   />

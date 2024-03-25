@@ -1,13 +1,10 @@
 import {Component} from 'react'
-
 import {Link} from 'react-router-dom'
 import {BiArrowBack} from 'react-icons/bi'
 import Modal from 'react-modal'
 import {CgClose} from 'react-icons/cg'
-
 import CFGameCard from '../CFGameCard'
 import CFGameResult from '../CFGameResult'
-
 import './index.css'
 
 const cardsData = [
@@ -131,11 +128,34 @@ class CFGame extends Component {
     )
 
     this.setState(
-      prevState => ({
-        cards: updatedCards,
-        flippedCards: [...prevState.flippedCards, id],
-        cardFlipCount: prevState.cardFlipCount + 1,
-      }),
+      prevState => {
+        const newFlippedCards = [...prevState.flippedCards, id]
+
+        if (newFlippedCards.length === 2) {
+          const [firstCardId, secondCardId] = newFlippedCards
+          const firstCardName = cards.find(card => card.id === firstCardId).name
+          const secondCardName = cards.find(card => card.id === secondCardId)
+            .name
+
+          if (firstCardName === secondCardName) {
+            return {
+              cards: updatedCards,
+              flippedCards: newFlippedCards,
+              score: prevState.score + 1,
+            }
+          }
+          return {
+            cards: updatedCards,
+            flippedCards: newFlippedCards,
+            cardFlipCount: prevState.cardFlipCount + 1,
+          }
+        }
+
+        return {
+          cards: updatedCards,
+          flippedCards: newFlippedCards,
+        }
+      },
       () => {
         const {flippedCards: currentFlippedCards} = this.state
         if (currentFlippedCards.length === 2) {
@@ -206,7 +226,6 @@ class CFGame extends Component {
       {
         cards: initialCards,
         flippedCards: [],
-        matchedCards: [],
         gameStarted: true,
         timeLeft: 120,
         formattedTime: '02:00',
@@ -319,9 +338,10 @@ class CFGame extends Component {
           <p className="timer">Time Left: {formattedTime}</p>
           <p className="score">Score - {score}</p>
         </div>
-        <div className="board">
+
+        <ul className="board">
           {cards.map(card => (
-            <ul className="card-list-item">
+            <li key={card.id} className="card-list-item">
               <CFGameCard
                 id={card.id}
                 name={card.name}
@@ -331,9 +351,9 @@ class CFGame extends Component {
                 data-testid="cardsData"
                 onClick={() => this.handleClick(card.id)}
               />
-            </ul>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     )
   }
